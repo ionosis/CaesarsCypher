@@ -1,36 +1,47 @@
 
 
-import java.util.Scanner;
-
 public class Main {
     public static void main(String[] args) {
-        Scanner in = new Scanner(System.in);
-        StringBuilder sb = new StringBuilder();
+
         Cypher cypher = new Cypher();
 
-        String magic = in.nextLine();
-        String msg = in.nextLine();
-        int key = in.nextInt();
-
-        switch (magic) {
-            case "enc":
-                cypher.encrypt(msg, key, sb);
-                break;
-            case "dec":
-                cypher.decrypt(msg, key, sb);
-                break;
-            default:
-                throw new IllegalStateException("Unexpected value: " + magic);
+        for (int i = 0; i < args.length; ++i) {
+            if (args[i].equals("-mode")) {
+                cypher.magic = args[i + 1];
+            } else if (args[i].equals("-key")) {
+                cypher.key = Integer.parseInt(args[i + 1]);
+            } else if (args[i].equals("-data")) {
+                cypher.msg = args[i + 1];
+            }
         }
 
-        System.out.println(sb.toString());
+        switch (cypher.magic) {
+            case "enc":
+                cypher.encrypt();
+                break;
+            case "dec":
+                cypher.decrypt();
+                break;
+            default:
+                throw new IllegalStateException("Unexpected value: " + cypher.magic);
 
+
+        }
+        System.out.println(cypher.sb.toString());
+        /*System.out.println(cypher.key);
+        System.out.println(cypher.magic);
+        System.out.println(cypher.msg);*/
     }
 }
 
-class Cypher {
 
-    public void encrypt(String msg, int key, StringBuilder sb) {
+class Cypher {
+    public StringBuilder sb = new StringBuilder();
+    String magic = "enc";
+    int key = 0;
+    String msg = "";
+
+    public void encrypt() {
         char[] arr = msg.toCharArray();
 
         for (char v : arr) {
@@ -39,10 +50,11 @@ class Cypher {
             char ch = (char) r;
             sb.append(ch);
         }
+
     }
 
 
-    public void decrypt(String msg, int key, StringBuilder sb) {
+    public void decrypt() {
 
         char[] arr = msg.toCharArray();
 
@@ -56,3 +68,5 @@ class Cypher {
         }
     }
 }
+
+
